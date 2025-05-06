@@ -64,7 +64,7 @@ jobs:
       - name: Initialize repo and sync
         run: |
          mkdir kernel_workspace && cd kernel_workspace
-         repo init -u https://github.com/JiuGeFaCai/kernel_manifest.git -b refs/heads/oneplus/${{ github.event.inputs.CPU }} -m ${{ github.event.inputs.FEIL }}.xml --depth=1
+         repo init -u https://github.com/Herobetrine/kernel_manifest.git -b refs/heads/oneplus/${{ github.event.inputs.CPU }} -m ${{ github.event.inputs.FEIL }}.xml --depth=1
          repo --trace sync -c -j$(nproc --all) --no-tags
          rm kernel_platform/common/android/abi_gki_protected_exports_* || echo "No protected exports!"
          rm kernel_platform/msm-kernel/android/abi_gki_protected_exports_* || echo "No protected exports!"
@@ -88,11 +88,7 @@ jobs:
            cd kernel_platform        
            cp ../susfs4ksu/kernel_patches/50_add_susfs_in_gki-${{ github.event.inputs.ANDROID_VERSION }}-${{ github.event.inputs.KERNEL_VERSION }}.patch ./common/
            cp ../susfs4ksu/kernel_patches/fs/* ./common/fs/
-           cp ../susfs4ksu/kernel_patches/include/linux/* ./common/include/linux/
-           #lz4k
-           cp -r ../SukiSU_patch/other/lz4k/include/linux/* ./common/include/linux
-           cp -r ../SukiSU_patch/other/lz4k/lib/* ./common/lib
-           cp -r ../SukiSU_patch/other/lz4k/crypto/* ./common/crypto
+           cp ../susfs4ksu/kernel_patches/include/linux/* ./common/include/linux/         
            # Apply patches
            cd ./common
 
@@ -104,11 +100,6 @@ jobs:
            patch -p1 -F 3 < syscall_hooks.patch
            echo "完成"
 
-      - name: Apply lz4kd Patches
-        run: |
-          cd kernel_workspace/kernel_platform/common
-          cp ../../SukiSU_patch/other/lz4k_patch/${{ github.event.inputs.KERNEL_VERSION }}/lz4kd.patch ./
-          patch -p1 -F 3 < lz4kd.patch || true
            
       - name: Add SUSFS Configuration Settings
         run: |
@@ -178,7 +169,7 @@ jobs:
          
       - name: Make AnyKernel3
         run: |
-         git clone https://github.com/JiuGeFaCai/AnyKernel3.git --depth=1      
+         git clone https://github.com/Herobetrine/AnyKernel3.git --depth=1      
          rm -rf ./AnyKernel3/.git
          rm -rf ./AnyKernel3/push.sh
          cp kernel_workspace/kernel_platform/dist/Image ./AnyKernel3/
